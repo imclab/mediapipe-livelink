@@ -52,3 +52,7 @@ Face and motion capture using mediapipe, send data to Unreal Engine with livelin
 - [nlohmann](THIRD_LICENSE/nlohmann/LICENSE)
 
 - [MeFaMo](THIRD_LICENSE/MeFaMo/LICENSE)
+
+## New: JARVIS live voice + multimodal starter
+
+A one-command starter stack for mobile/Mac/PC is available in [`jarvis-stack/`](jarvis-stack/README.md).

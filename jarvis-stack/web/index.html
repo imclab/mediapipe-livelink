@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JARVIS Live Agent</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background: #0f172a; color: #e2e8f0; }
+      .card { max-width: 760px; margin: 0 auto; background: #111827; border-radius: 12px; padding: 1rem; }
+      textarea, input, button { width: 100%; margin-top: 0.6rem; border-radius: 8px; border: 1px solid #334155; background:#020617; color:#e2e8f0; padding: 0.7rem; }
+      button { background: #2563eb; border: none; font-weight: bold; cursor: pointer; }
+      .row { display: grid; gap: 0.6rem; grid-template-columns: 1fr 1fr; }
+      pre { background: #020617; padding: .8rem; border-radius: 8px; overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>JARVIS Live Voice + Spatial Agent</h1>
+      <p>Single endpoint for desktop/mobile browser. Use text or speech-to-text (if supported by browser).</p>
+
+      <div class="row">
+        <button id="startVoice">🎙️ Start Speech Recognition</button>
+        <button id="sendTurn">Send Turn</button>
+      </div>
+
+      <input id="transcript" placeholder="Speak or type your command..." />
+      <textarea id="landmarks" rows="5" placeholder='Optional face landmarks JSON array from MediaPipe'></textarea>
+
+      <h3>Assistant Response</h3>
+      <pre id="output">Waiting...</pre>
+    </div>
+
+    <script>
+      const transcript = document.getElementById('transcript');
+      const landmarks = document.getElementById('landmarks');
+      const output = document.getElementById('output');
+
+      document.getElementById('sendTurn').onclick = async () => {
+        let face_landmarks = null;
+        if (landmarks.value.trim()) {
+          try { face_landmarks = JSON.parse(landmarks.value); }
+          catch (e) { output.textContent = 'Invalid landmarks JSON'; return; }
+        }
+
+        const res = await fetch('/turn', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ transcript: transcript.value, face_landmarks })
+        });
+        output.textContent = JSON.stringify(await res.json(), null, 2);
+      };
+
+      document.getElementById('startVoice').onclick = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          output.textContent = 'Speech recognition not supported in this browser.';
+          return;
+        }
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.onresult = (event) => {
+          transcript.value = event.results[0][0].transcript;
+        };
+        recognition.start();
+      };
+    </script>
+  </body>
+</html>
