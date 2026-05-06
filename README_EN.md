@@ -33,6 +33,10 @@ Face and motion capture using mediapipe, send data to Unreal Engine with livelin
 - Packet encoding writes binary values into a `std::vector<char>` with optional byte reversal for network order.
 - Build paths in `CMakeLists.txt` are currently Windows-local absolute paths and may need adjustment on another machine.
 
+## Quickstart: Jarvis always-on voice chat
+
+- See [`docs/JARVIS_QUICKSTART.md`](docs/JARVIS_QUICKSTART.md) for a 1-minute setup blueprint targeting macOS/Windows + iOS/Android, with VisionOS/Quest watch mode.
+
 ## TODO
 
 - [x] Face Capture
